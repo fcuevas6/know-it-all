@@ -9,7 +9,7 @@ export default function Question({ question, onAnswer}) {
             <h2>{question.question.text}</h2>
                 {question.shuffledAnswers.map((answer, index) => (
                     <button key={index} onClick={() => handleAnswerClick(answer.isCorrect)}>
-                        {answer}
+                        {answer.text}
                     </button>
                 ))}
          </div>

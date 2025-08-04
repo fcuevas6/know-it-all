@@ -10,29 +10,29 @@ function shuffleArray(arr) {
     return arr
 }
 
-export default function getQuestions(setQuestions) {
-
-    useEffect(() => {
-        const fetchQuestions = async () => {
-            try {
-                const response = await fetch('https://the-trivia-api.com/v2/questions')
-                if (!response.ok) {
-                    throw new Error("Response was not ok")
-                }
-                const data = await response.json();
-                const shuffledQuestions = data.map(question => {
-                    const allAnswers = [...question.incorrectAnswers, question.correctAnswer]
-                    const shuffledAnswers = shuffleArray(allAnswers.slice())
-                    return {
-                        ...question,
-                        shuffledAnswers: shuffledAnswers,
-                    }
-                })
-                setQuestions(shuffledQuestions);
-            } catch (err) {
-                console.log('Error fetching questions:', err);
-            }
+export default async function getQuestions() {
+    try {
+        const response = await fetch('https://the-trivia-api.com/v2/questions')
+        if (!response.ok) {
+            throw new Error("Response was not ok")
         }
-        fetchQuestions();
-    }, [setQuestions])
+        const data = await response.json();
+        const shuffledQuestions = data.map(question => {
+            const allAnswers = [...question.incorrectAnswers, question.correctAnswer]
+            const shuffledAnswers = shuffleArray(
+                    [
+                        ...question.incorrectAnswers.map(a => ({ text: a, isCorrect: false })),
+                        { text: question.correctAnswer, isCorrect: true }
+                    ]
+            )
+            return {
+                ...question,
+                shuffledAnswers: shuffledAnswers,
+            }
+        })
+        return shuffledQuestions;
+    } catch (err) {
+        console.log('Error fetching questions:', err);
+        return [];
+    }
 }

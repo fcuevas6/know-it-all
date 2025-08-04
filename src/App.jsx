@@ -1,17 +1,19 @@
 
 import './App.css'
+import { PlayerProvider, usePlayer } from './context/PlayerProvider'
 import GamePlay from './pages/GamePlay'
 import Home from './pages/Home'
-import Question from './pages/Question'
+
+function Main() {
+  const { gameStarted } = usePlayer()
+  return gameStarted ? <GamePlay /> : <Home />
+}
 
 function App() {
-
   return (
-    <>
-      <h1>KnowItAll</h1>
-      <Home />
-      <GamePlay/>
-    </>
+    <PlayerProvider>
+      <Main />
+    </PlayerProvider>
   )
 }
 
